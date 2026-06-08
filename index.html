@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102c3a" />
+    <title>بنك أسئلة مهارات البحث والتحليل</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=5" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="topbar">
+      <button class="brand" id="home-button" type="button" aria-label="العودة للرئيسية">
+        <span class="brand-mark">Q</span>
+        <span>
+          <strong>Research Questions</strong>
+          <small>ذاكر، جاوب، وراجع غلطاتك</small>
+        </span>
+      </button>
+      <div class="topbar-stat">
+        <span id="total-question-count">0</span>
+        <small>سؤال متاح</small>
+      </div>
+    </header>
+
+    <main>
+      <section class="welcome" id="welcome-screen">
+        <div class="welcome-copy">
+          <span class="eyebrow">Research & Analysis Skills</span>
+          <h1><em>هانت يا بطل</em></h1>
+          <p>كل أسئلة الملف هتظهر ورا بعض في صفحة واحدة، وفي النهاية هتعرف الصح والغلط والإجابة الصحيحة لكل غلطة.</p>
+          <div class="welcome-stats">
+            <div><strong>7</strong><span>محاضرات</span></div>
+            <div><strong id="hero-question-count">0</strong><span>سؤال</span></div>
+            <div><strong>100%</strong><span>تصحيح فوري</span></div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-label">طريقة المذاكرة</span>
+          <ol>
+            <li><b>01</b><span>اختار ملف المحاضرة</span></li>
+            <li><b>02</b><span>حل كل الأسئلة براحتك</span></li>
+            <li><b>03</b><span>صحح وراجع غلطاتك</span></li>
+          </ol>
+          <div class="hero-card-orbit"></div>
+        </div>
+      </section>
+
+      <section class="lecture-section" id="lecture-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ابدأ من هنا</span>
+            <h2>اختار الشابتر أو الملف</h2>
+          </div>
+          <span class="section-note">التقدم بيتحفظ تلقائيًا على الجهاز</span>
+        </div>
+        <div class="lecture-grid" id="lecture-grid"></div>
+      </section>
+
+      <section class="quiz-screen is-hidden" id="quiz-screen">
+        <div class="quiz-heading">
+          <button class="back-button" id="back-button" type="button">رجوع للملفات</button>
+          <div>
+            <span class="eyebrow" id="quiz-file-name"></span>
+            <h1 id="quiz-title"></h1>
+          </div>
+          <div class="progress-box">
+            <div class="progress-label"><span>تم الحل</span><strong id="answered-count">0 / 0</strong></div>
+            <div class="progress-track"><span id="progress-bar"></span></div>
+          </div>
+        </div>
+
+        <div class="quiz-tools">
+          <p>كل سؤال ظاهر بنفس اختياراته الأصلية من الملف بعد تصحيح الأخطاء الإملائية فقط.</p>
+          <button class="ghost-button" id="clear-answers" type="button">مسح الإجابات</button>
+        </div>
+
+        <form id="quiz-form">
+          <div class="question-list" id="question-list"></div>
+          <div class="submit-zone">
+            <span>خلصت المحاضرة؟ شوف نتيجتك دلوقتي.</span>
+            <button class="submit-button" type="submit">صحح الإجابات</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer" dir="ltr">
+      <a href="https://www.linkedin.com/in/ahmed-salah-519170220/" target="_blank" rel="noopener noreferrer">
+        <span>Developed by</span>
+        <strong>ENG AHMED SALAH</strong>
+        <b aria-hidden="true">in</b>
+      </a>
+    </footer>
+
+    <div class="result-overlay is-hidden" id="result-overlay">
+      <section class="result-card" role="dialog" aria-modal="true" aria-labelledby="result-title">
+        <button class="close-result" id="close-result" type="button" aria-label="إغلاق">×</button>
+        <span class="result-kicker">نتيجة المحاضرة</span>
+        <h2 id="result-title">شغل ممتاز!</h2>
+        <div class="score-ring" id="score-ring"><strong id="score-percent">0%</strong><span>نسبتك</span></div>
+        <div class="result-stats">
+          <div class="correct-stat"><strong id="correct-count">0</strong><span>إجابة صح</span></div>
+          <div class="wrong-stat"><strong id="wrong-count">0</strong><span>إجابة غلط</span></div>
+          <div class="empty-stat"><strong id="empty-count">0</strong><span>بدون إجابة</span></div>
+        </div>
+        <button class="review-button" id="review-wrong" type="button">راجع الغلط</button>
+      </section>
+    </div>
+
+    <script src="data/questions.js"></script>
+    <script src="data/codex-lecture1.js"></script>
+    <script src="data/codex-lecture2.js"></script>
+  <script src="data/codex-lecture3.js"></script>
+  <script src="data/codex-lecture4.js"></script>
+  <script src="data/codex-lecture5.js"></script>
+    <script src="data/codex-lecture6.js"></script>
+    <script src="data/codex-lecture7.js"></script>
+    <script src="data/original-choices.js?v=2"></script>
+    <script src="app.js?v=5"></script>
+  </body>
+</html>
