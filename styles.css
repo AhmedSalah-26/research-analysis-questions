@@ -557,6 +557,83 @@ main {
 
 .exam-card .lecture-progress i { background: var(--yellow); }
 
+.hard-section { padding: 0 0 75px; }
+
+.hard-panel {
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: 1fr minmax(195px, 0.32fr);
+  align-items: center;
+  gap: 22px;
+  border-radius: 26px;
+  color: var(--paper);
+  background: linear-gradient(135deg, #8d2d39, var(--ink));
+  box-shadow: var(--shadow);
+}
+
+.hard-panel .eyebrow { color: var(--yellow); }
+
+.hard-panel h2 {
+  margin: 7px 0;
+  font-size: clamp(28px, 4.4vw, 44px);
+  letter-spacing: -0.05em;
+}
+
+.hard-panel p {
+  max-width: 620px;
+  margin: 0;
+  color: rgba(245, 241, 232, 0.72);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.hard-card {
+  position: relative;
+  min-height: 126px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  color: var(--ink);
+  background: var(--paper);
+  text-align: right;
+}
+
+.hard-card span,
+.hard-card strong,
+.hard-card small { display: block; }
+
+.hard-card span { color: var(--red); font-size: 9px; font-weight: 800; }
+.hard-card strong { margin-top: 7px; font-size: 17px; }
+.hard-card small { margin-top: 3px; color: var(--ink-soft); font-size: 8px; }
+.hard-card .lecture-progress { right: 14px; bottom: 43px; left: 14px; }
+.hard-card .lecture-progress i { background: var(--red); }
+
+.hard-actions {
+  position: absolute;
+  right: 14px;
+  bottom: 8px;
+  left: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.hard-actions button {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  background: #fff;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.hard-actions button:last-child {
+  border-color: var(--red);
+  color: #fff;
+  background: var(--red);
+}
+
 .is-hidden { display: none !important; }
 
 .quiz-screen { padding: 60px 0 100px; }
@@ -803,6 +880,7 @@ main {
   .hero-card ol { margin-top: 38px; }
   .lecture-grid { grid-template-columns: repeat(2, 1fr); }
   .exam-grid { grid-template-columns: repeat(2, 1fr); }
+  .hard-panel { grid-template-columns: 1fr; }
   .quiz-heading { grid-template-columns: auto 1fr; }
 }
 
@@ -835,6 +913,7 @@ main {
   .section-heading { align-items: start; flex-direction: column; }
   .lecture-grid { grid-template-columns: 1fr; }
   .exam-grid { grid-template-columns: 1fr; }
+  .hard-panel { padding: 22px; }
   .lecture-card { min-height: 175px; }
   .quiz-screen { padding-top: 35px; }
   .quiz-heading { grid-template-columns: 1fr; }

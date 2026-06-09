@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=12" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -85,6 +85,26 @@
         <div class="exam-grid" id="exam-grid"></div>
       </section>
 
+      <section class="hard-section" id="hard-section">
+        <div class="hard-panel">
+          <div>
+            <span class="eyebrow">محتاج تركيز</span>
+            <h2>الأسئلة الصعبة</h2>
+            <p>أسئلة مختارة ومحلولة من الملاحظات المكتوبة للمحاضرات 2 و3 و5 و6 للمراجعة والتركيز.</p>
+          </div>
+          <div class="hard-card" id="hard-card">
+            <span>مراجعة محلولة</span>
+            <strong id="hard-question-count">0 سؤال</strong>
+            <small id="hard-progress-text">كل الأسئلة محلولة</small>
+            <div class="lecture-progress"><i id="hard-progress-bar"></i></div>
+            <div class="hard-actions">
+              <button type="button" data-hard-mode="solve">جرب تحل</button>
+              <button type="button" data-hard-mode="review">عرض الحل</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="quiz-screen is-hidden" id="quiz-screen">
         <div class="quiz-heading">
           <button class="back-button" id="back-button" type="button">رجوع للرئيسية</button>
@@ -149,6 +169,7 @@
     <script src="data/codex-lecture6.js"></script>
     <script src="data/codex-lecture7.js"></script>
     <script src="data/original-choices.js?v=2"></script>
-    <script src="app.js?v=10"></script>
+    <script src="data/hard-questions.js?v=1"></script>
+    <script src="app.js?v=12"></script>
   </body>
 </html>

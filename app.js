@@ -4,6 +4,7 @@ const lectureSection = document.querySelector("#lecture-section");
 const lectureGrid = document.querySelector("#lecture-grid");
 const examSection = document.querySelector("#exam-section");
 const examGrid = document.querySelector("#exam-grid");
+const hardSection = document.querySelector("#hard-section");
 const quizScreen = document.querySelector("#quiz-screen");
 const questionList = document.querySelector("#question-list");
 const quizForm = document.querySelector("#quiz-form");
@@ -18,6 +19,7 @@ let currentLecture = null;
 let graded = false;
 let lastScrollY = window.scrollY;
 let issueIndex = 0;
+let hardReviewMode = true;
 
 const hasChoices = (question) => Array.isArray(question.choices) && question.choices.length > 1;
 const questionKey = (question) => `q-${question.id}`;
@@ -68,7 +70,40 @@ function buildComprehensiveExam(examNumber) {
 }
 
 const comprehensiveExams = Array.from({ length: 10 }, (_, index) => buildComprehensiveExam(index + 1));
-const allQuizzes = [...quizData, ...comprehensiveExams];
+
+function buildHardQuiz() {
+  const rawQuestions = window.HARD_QUESTIONS || [];
+  const answersByLecture = rawQuestions.reduce((groups, question) => {
+    groups[question.lecture] ??= [];
+    groups[question.lecture].push(question);
+    return groups;
+  }, {});
+  const questions = rawQuestions.map((question, index) => {
+    const answerPool = [...new Set(answersByLecture[question.lecture].map((item) => item.answer))]
+      .filter((answer) => answer !== question.answer);
+    const choices = seededShuffle(
+      [question.answer, ...seededShuffle(answerPool, 5100 + index).slice(0, 3)],
+      9100 + index,
+    );
+    return {
+      ...question,
+      id: `hard-${index + 1}`,
+      sourceLectureNumber: question.lecture,
+      choices,
+    };
+  });
+
+  return {
+    id: "hard-focus",
+    type: "hard",
+    title: "الأسئلة الصعبة",
+    fileName: "أسئلة مختارة تحتاج تركيز",
+    questions: seededShuffle(questions, 20260609),
+  };
+}
+
+const hardQuiz = buildHardQuiz();
+const allQuizzes = [...quizData, ...comprehensiveExams, hardQuiz];
 
 const storageKey = (lectureId) => `research-quiz:${lectureId}`;
 const getSaved = (lectureId) => JSON.parse(localStorage.getItem(storageKey(lectureId)) || "{}");
@@ -80,6 +115,7 @@ const saveAnswers = () => {
   updateProgress();
   renderLectureCards();
   renderExamCards();
+  renderHardCard();
 };
 
 const getOptions = (question) => {
@@ -125,12 +161,19 @@ function renderExamCards() {
   }).join("");
 }
 
+function renderHardCard() {
+  document.querySelector("#hard-question-count").textContent = `${hardQuiz.questions.length} سؤال`;
+  document.querySelector("#hard-progress-text").textContent = "كل الأسئلة محلولة";
+  document.querySelector("#hard-progress-bar").style.width = "100%";
+}
+
 function renderQuestions() {
   const saved = getSaved(currentLecture.id);
   const originalQuestions = currentLecture.questions.filter(hasChoices);
   questionList.innerHTML = originalQuestions.map((question, index) => {
     const options = getOptions(question);
-    const questionLabel = currentLecture.type === "exam"
+    const isSolvedReview = currentLecture.type === "hard" && hardReviewMode;
+    const questionLabel = ["exam", "hard"].includes(currentLecture.type)
       ? `سؤال ${index + 1} · المحاضرة ${question.sourceLectureNumber}`
       : `سؤال ${question.id}`;
     return `
@@ -139,8 +182,8 @@ function renderQuestions() {
         <h3>${escapeHtml(question.question)}</h3>
         <div class="options">
           ${options.map((option) => `
-            <label class="option">
-              <input type="radio" name="${questionKey(question)}" value="${escapeHtml(option)}" ${saved[questionKey(question)] === option ? "checked" : ""} />
+            <label class="option ${isSolvedReview && option === question.answer ? "correct-answer" : ""}">
+              <input type="radio" name="${questionKey(question)}" value="${escapeHtml(option)}" ${(isSolvedReview ? question.answer : saved[questionKey(question)]) === option ? "checked" : ""} ${isSolvedReview ? "disabled" : ""} />
               <span>${escapeHtml(option)}</span>
             </label>
           `).join("")}
@@ -148,6 +191,7 @@ function renderQuestions() {
       </article>
     `;
   }).join("");
+  document.querySelector(".submit-zone").classList.toggle("is-hidden", currentLecture.type === "hard" && hardReviewMode);
   updateProgress();
 }
 
@@ -162,11 +206,19 @@ function openQuiz(quizId, push = true) {
   welcomeScreen.classList.add("is-hidden");
   lectureSection.classList.add("is-hidden");
   examSection.classList.add("is-hidden");
+  hardSection.classList.add("is-hidden");
   quizScreen.classList.remove("is-hidden");
   topbarTotal.classList.add("is-hidden");
   topbarProgress.classList.remove("is-hidden");
   renderQuestions();
-  document.querySelector("#result-kicker").textContent = currentLecture.type === "exam" ? "نتيجة الاختبار الشامل" : "نتيجة المحاضرة";
+  document.querySelector(".quiz-tools p").textContent = currentLecture.type === "hard"
+    ? hardReviewMode
+      ? "وضع عرض الحل: الإجابات الصحيحة ظاهرة للمراجعة والتركيز."
+      : "وضع جرب تحل: اختر إجاباتك ثم اضغط صحح الإجابات."
+    : "كل سؤال ظاهر بنفس اختياراته الأصلية من الملف بعد تصحيح الأخطاء الإملائية فقط.";
+  document.querySelector("#result-kicker").textContent = currentLecture.type === "hard"
+    ? "نتيجة الأسئلة الصعبة"
+    : currentLecture.type === "exam" ? "نتيجة الاختبار الشامل" : "نتيجة المحاضرة";
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (push) history.pushState({ screen: "quiz", id: quizId }, "", "#" + quizId);
 }
@@ -180,18 +232,20 @@ function showHome() {
   welcomeScreen.classList.remove("is-hidden");
   lectureSection.classList.remove("is-hidden");
   examSection.classList.remove("is-hidden");
+  hardSection.classList.remove("is-hidden");
   resultOverlay.classList.add("is-hidden");
   topbarProgress.classList.add("is-hidden");
   topbarTotal.classList.remove("is-hidden");
   renderLectureCards();
   renderExamCards();
+  renderHardCard();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function updateProgress() {
   if (!currentLecture) return;
   const answered = new FormData(quizForm).keys();
-  const count = [...answered].length;
+  const count = currentLecture.type === "hard" && hardReviewMode ? currentLecture.questions.length : [...answered].length;
   const total = currentLecture.questions.filter(hasChoices).length;
   document.querySelector("#answered-count").textContent = `${count} / ${total}`;
   document.querySelector("#progress-bar").style.width = `${(count / total) * 100}%`;
@@ -252,6 +306,7 @@ function clearAnswers() {
   renderQuestions();
   renderLectureCards();
   renderExamCards();
+  renderHardCard();
 }
 
 function reviewWrong() {
@@ -307,6 +362,12 @@ examGrid.addEventListener("click", (event) => {
   const card = event.target.closest("[data-quiz]");
   if (card) openQuiz(card.dataset.quiz);
 });
+document.querySelector("#hard-card").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-hard-mode]");
+  if (!button) return;
+  hardReviewMode = button.dataset.hardMode === "review";
+  openQuiz(hardQuiz.id);
+});
 quizForm.addEventListener("change", () => { if (!graded) saveAnswers(); });
 quizForm.addEventListener("submit", gradeQuiz);
 document.querySelector("#back-button").addEventListener("click", () => history.back());
@@ -353,3 +414,4 @@ document.querySelector("#total-question-count").textContent = totalQuestions;
 document.querySelector("#hero-question-count").textContent = totalQuestions;
 renderLectureCards();
 renderExamCards();
+renderHardCard();
