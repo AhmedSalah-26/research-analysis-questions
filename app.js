@@ -9,10 +9,13 @@ const resultOverlay = document.querySelector("#result-overlay");
 const topbarTotal = document.querySelector("#topbar-total");
 const topbarProgress = document.querySelector("#topbar-progress");
 const topbar = document.querySelector(".topbar");
+const issueNav = document.querySelector("#issue-nav");
+const issuePosition = document.querySelector("#issue-position");
 
 let currentLecture = null;
 let graded = false;
 let lastScrollY = window.scrollY;
+let issueIndex = 0;
 
 const storageKey = (lectureId) => `research-quiz:${lectureId}`;
 const getSaved = (lectureId) => JSON.parse(localStorage.getItem(storageKey(lectureId)) || "{}");
@@ -76,6 +79,7 @@ function renderQuestions() {
 function openLecture(lectureId, push = true) {
   currentLecture = quizData.find((lecture) => lecture.id === lectureId);
   graded = false;
+  issueNav.classList.add("is-hidden");
   topbar.classList.remove("is-scroll-hidden");
   document.querySelector("#quiz-title").textContent = currentLecture.title;
   document.querySelector("#quiz-file-name").textContent = currentLecture.fileName;
@@ -92,6 +96,7 @@ function openLecture(lectureId, push = true) {
 function showHome() {
   currentLecture = null;
   graded = false;
+  issueNav.classList.add("is-hidden");
   topbar.classList.remove("is-scroll-hidden");
   quizScreen.classList.add("is-hidden");
   welcomeScreen.classList.remove("is-hidden");
@@ -153,6 +158,9 @@ function gradeQuiz(event) {
   document.querySelector("#wrong-count").textContent = wrong;
   document.querySelector("#empty-count").textContent = empty;
   document.querySelector("#result-title").textContent = percent >= 85 ? "شغل ممتاز!" : percent >= 60 ? "نتيجة كويسة!" : "راجعها مرة كمان";
+  issueIndex = 0;
+  issueNav.classList.toggle("is-hidden", wrong + empty === 0);
+  updateIssuePosition();
   resultOverlay.classList.remove("is-hidden");
 }
 
@@ -160,14 +168,33 @@ function clearAnswers() {
   if (!currentLecture) return;
   localStorage.removeItem(storageKey(currentLecture.id));
   graded = false;
+  issueNav.classList.add("is-hidden");
   renderQuestions();
   renderLectureCards();
 }
 
 function reviewWrong() {
   resultOverlay.classList.add("is-hidden");
-  const firstIssue = document.querySelector(".question-card.is-wrong, .question-card.is-empty");
-  firstIssue?.scrollIntoView({ behavior: "smooth", block: "center" });
+  issueIndex = 0;
+  goToIssue();
+}
+
+function getIssues() {
+  return [...document.querySelectorAll(".question-card.is-wrong, .question-card.is-empty")];
+}
+
+function updateIssuePosition() {
+  const issues = getIssues();
+  if (!issues.length) return;
+  issuePosition.textContent = `${issueIndex + 1} / ${issues.length}`;
+}
+
+function goToIssue(direction = 0) {
+  const issues = getIssues();
+  if (!issues.length) return;
+  issueIndex = (issueIndex + direction + issues.length) % issues.length;
+  updateIssuePosition();
+  issues[issueIndex].scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function escapeHtml(value) {
@@ -202,6 +229,8 @@ document.querySelector("#home-button").addEventListener("click", () => { if (cur
 document.querySelector("#clear-answers").addEventListener("click", clearAnswers);
 document.querySelector("#close-result").addEventListener("click", () => resultOverlay.classList.add("is-hidden"));
 document.querySelector("#review-wrong").addEventListener("click", reviewWrong);
+document.querySelector("#previous-issue").addEventListener("click", () => goToIssue(-1));
+document.querySelector("#next-issue").addEventListener("click", () => goToIssue(1));
 resultOverlay.addEventListener("click", (event) => { if (event.target === resultOverlay) resultOverlay.classList.add("is-hidden"); });
 window.addEventListener("scroll", () => {
   const currentScrollY = window.scrollY;

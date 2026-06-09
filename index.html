@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -120,6 +120,12 @@
       </section>
     </div>
 
+    <nav class="issue-nav is-hidden" id="issue-nav" aria-label="التنقل بين الإجابات الغلط">
+      <button id="previous-issue" type="button" aria-label="الإجابة الغلط السابقة">↑</button>
+      <span id="issue-position">1 / 1</span>
+      <button id="next-issue" type="button" aria-label="الإجابة الغلط التالية">↓</button>
+    </nav>
+
     <script src="data/questions.js"></script>
     <script src="data/codex-lecture1.js"></script>
     <script src="data/codex-lecture2.js"></script>
@@ -129,6 +135,6 @@
     <script src="data/codex-lecture6.js"></script>
     <script src="data/codex-lecture7.js"></script>
     <script src="data/original-choices.js?v=2"></script>
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=9"></script>
   </body>
 </html>

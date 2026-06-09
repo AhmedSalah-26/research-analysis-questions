@@ -648,6 +648,43 @@ main {
 .wrong-stat { color: var(--red); background: var(--red-soft); }
 .empty-stat { color: #9c7416; background: #fff6dc; }
 
+.issue-nav {
+  position: fixed;
+  left: 18px;
+  bottom: 22px;
+  z-index: 30;
+  padding: 6px;
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(16, 44, 58, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.92);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.issue-nav button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 13px;
+  color: var(--paper);
+  background: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.issue-nav button:hover {
+  background: var(--orange);
+}
+
+.issue-nav span {
+  color: var(--ink-soft);
+  font-size: 8px;
+  font-weight: 800;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   .welcome { grid-template-columns: 1fr; gap: 20px; padding-top: 60px; }
   .hero-card { min-height: 290px; border-radius: 70px 22px 22px 22px; }
@@ -692,4 +729,6 @@ main {
   .options { grid-template-columns: 1fr; }
   .question-card { padding: 18px; }
   .submit-zone { align-items: stretch; flex-direction: column; text-align: center; }
+  .issue-nav { left: 10px; bottom: 12px; }
+  .issue-nav button { width: 38px; height: 38px; }
 }
