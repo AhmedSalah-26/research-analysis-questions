@@ -651,8 +651,22 @@ main {
 
 @media (max-width: 620px) {
   .topbar { width: min(100% - 20px, 1180px); top: 7px; }
-  .topbar-stat:has(.topbar-progress:not(.is-hidden)) { width: min(230px, 62vw); }
-  .topbar-clear-button { padding: 7px; font-size: 7px; }
+  .topbar:has(.topbar-progress:not(.is-hidden)) {
+    padding: 11px;
+    gap: 8px;
+  }
+  .topbar-stat:has(.topbar-progress:not(.is-hidden)) {
+    width: min(230px, 62vw);
+  }
+  .topbar-progress {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .topbar-clear-button {
+    width: 100%;
+    padding: 9px 11px;
+    font-size: 8px;
+  }
   main { width: min(100% - 20px, 1180px); }
   .brand small { display: none; }
   .welcome { min-height: auto; padding: 55px 4px 30px; }
