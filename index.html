@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <link rel="stylesheet" href="styles.css?v=10" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -67,16 +67,27 @@
         <div class="section-heading">
           <div>
             <span class="eyebrow">ابدأ من هنا</span>
-            <h2>اختار الشابتر أو الملف</h2>
+            <h2>اختبار على كل محاضرة</h2>
           </div>
           <span class="section-note">التقدم بيتحفظ تلقائيًا على الجهاز</span>
         </div>
         <div class="lecture-grid" id="lecture-grid"></div>
       </section>
 
+      <section class="exam-section" id="exam-section">
+        <div class="section-heading exam-heading">
+          <div>
+            <span class="eyebrow">اختبر نفسك في المنهج كله</span>
+            <h2>اختبارات شاملة</h2>
+          </div>
+          <span class="section-note">10 اختبارات · كل اختبار 100 سؤال عشوائي من المحاضرات السبع</span>
+        </div>
+        <div class="exam-grid" id="exam-grid"></div>
+      </section>
+
       <section class="quiz-screen is-hidden" id="quiz-screen">
         <div class="quiz-heading">
-          <button class="back-button" id="back-button" type="button">رجوع للملفات</button>
+          <button class="back-button" id="back-button" type="button">رجوع للرئيسية</button>
           <div>
             <span class="eyebrow" id="quiz-file-name"></span>
             <h1 id="quiz-title"></h1>
@@ -90,7 +101,7 @@
         <form id="quiz-form">
           <div class="question-list" id="question-list"></div>
           <div class="submit-zone">
-            <span>خلصت المحاضرة؟ شوف نتيجتك دلوقتي.</span>
+            <span>خلصت الأسئلة؟ شوف نتيجتك دلوقتي.</span>
             <button class="submit-button" type="submit">صحح الإجابات</button>
           </div>
         </form>
@@ -108,7 +119,7 @@
     <div class="result-overlay is-hidden" id="result-overlay">
       <section class="result-card" role="dialog" aria-modal="true" aria-labelledby="result-title">
         <button class="close-result" id="close-result" type="button" aria-label="إغلاق">×</button>
-        <span class="result-kicker">نتيجة المحاضرة</span>
+        <span class="result-kicker" id="result-kicker">نتيجة الاختبار</span>
         <h2 id="result-title">شغل ممتاز!</h2>
         <div class="score-ring" id="score-ring"><strong id="score-percent">0%</strong><span>نسبتك</span></div>
         <div class="result-stats">
@@ -135,6 +146,6 @@
     <script src="data/codex-lecture6.js"></script>
     <script src="data/codex-lecture7.js"></script>
     <script src="data/original-choices.js?v=2"></script>
-    <script src="app.js?v=9"></script>
+    <script src="app.js?v=10"></script>
   </body>
 </html>
