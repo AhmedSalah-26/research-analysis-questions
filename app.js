@@ -8,9 +8,11 @@ const quizForm = document.querySelector("#quiz-form");
 const resultOverlay = document.querySelector("#result-overlay");
 const topbarTotal = document.querySelector("#topbar-total");
 const topbarProgress = document.querySelector("#topbar-progress");
+const topbar = document.querySelector(".topbar");
 
 let currentLecture = null;
 let graded = false;
+let lastScrollY = window.scrollY;
 
 const storageKey = (lectureId) => `research-quiz:${lectureId}`;
 const getSaved = (lectureId) => JSON.parse(localStorage.getItem(storageKey(lectureId)) || "{}");
@@ -74,6 +76,7 @@ function renderQuestions() {
 function openLecture(lectureId, push = true) {
   currentLecture = quizData.find((lecture) => lecture.id === lectureId);
   graded = false;
+  topbar.classList.remove("is-scroll-hidden");
   document.querySelector("#quiz-title").textContent = currentLecture.title;
   document.querySelector("#quiz-file-name").textContent = currentLecture.fileName;
   welcomeScreen.classList.add("is-hidden");
@@ -89,6 +92,7 @@ function openLecture(lectureId, push = true) {
 function showHome() {
   currentLecture = null;
   graded = false;
+  topbar.classList.remove("is-scroll-hidden");
   quizScreen.classList.add("is-hidden");
   welcomeScreen.classList.remove("is-hidden");
   lectureSection.classList.remove("is-hidden");
@@ -199,6 +203,18 @@ document.querySelector("#clear-answers").addEventListener("click", clearAnswers)
 document.querySelector("#close-result").addEventListener("click", () => resultOverlay.classList.add("is-hidden"));
 document.querySelector("#review-wrong").addEventListener("click", reviewWrong);
 resultOverlay.addEventListener("click", (event) => { if (event.target === resultOverlay) resultOverlay.classList.add("is-hidden"); });
+window.addEventListener("scroll", () => {
+  const currentScrollY = window.scrollY;
+  const scrollingDown = currentScrollY > lastScrollY;
+
+  if (currentScrollY < 80 || !scrollingDown) {
+    topbar.classList.remove("is-scroll-hidden");
+  } else if (currentScrollY - lastScrollY > 4) {
+    topbar.classList.add("is-scroll-hidden");
+  }
+
+  lastScrollY = currentScrollY;
+}, { passive: true });
 
 history.replaceState({ screen: "home" }, "", window.location.pathname + window.location.search);
 

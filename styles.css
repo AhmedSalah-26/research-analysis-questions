@@ -70,6 +70,13 @@ button { cursor: pointer; }
   position: sticky;
   top: 12px;
   z-index: 20;
+  transition: transform 220ms ease, opacity 180ms ease;
+}
+
+.topbar.is-scroll-hidden {
+  opacity: 0;
+  transform: translateY(calc(-100% - 32px));
+  pointer-events: none;
 }
 
 .brand {
