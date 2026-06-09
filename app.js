@@ -6,6 +6,8 @@ const quizScreen = document.querySelector("#quiz-screen");
 const questionList = document.querySelector("#question-list");
 const quizForm = document.querySelector("#quiz-form");
 const resultOverlay = document.querySelector("#result-overlay");
+const topbarTotal = document.querySelector("#topbar-total");
+const topbarProgress = document.querySelector("#topbar-progress");
 
 let currentLecture = null;
 let graded = false;
@@ -77,6 +79,8 @@ function openLecture(lectureId, push = true) {
   welcomeScreen.classList.add("is-hidden");
   lectureSection.classList.add("is-hidden");
   quizScreen.classList.remove("is-hidden");
+  topbarTotal.classList.add("is-hidden");
+  topbarProgress.classList.remove("is-hidden");
   renderQuestions();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (push) history.pushState({ screen: "quiz", id: lectureId }, "", "#" + lectureId);
@@ -89,6 +93,8 @@ function showHome() {
   welcomeScreen.classList.remove("is-hidden");
   lectureSection.classList.remove("is-hidden");
   resultOverlay.classList.add("is-hidden");
+  topbarProgress.classList.add("is-hidden");
+  topbarTotal.classList.remove("is-hidden");
   renderLectureCards();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }

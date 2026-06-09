@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=6" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -22,9 +22,21 @@
           <small>ذاكر، جاوب، وراجع غلطاتك</small>
         </span>
       </button>
-      <div class="topbar-stat">
-        <span id="total-question-count">0</span>
-        <small>سؤال متاح</small>
+      <div class="topbar-stat" id="topbar-stat">
+        <div class="topbar-total" id="topbar-total">
+          <span id="total-question-count">0</span>
+          <small>سؤال متاح</small>
+        </div>
+        <div class="topbar-progress is-hidden" id="topbar-progress">
+          <div class="topbar-progress-content">
+            <div class="topbar-progress-label">
+              <small>تم الحل</small>
+              <strong id="answered-count">0 / 0</strong>
+            </div>
+            <div class="topbar-progress-track"><span id="progress-bar"></span></div>
+          </div>
+          <button class="topbar-clear-button" id="clear-answers" type="button">مسح الإجابات</button>
+        </div>
       </div>
     </header>
 
@@ -69,15 +81,10 @@
             <span class="eyebrow" id="quiz-file-name"></span>
             <h1 id="quiz-title"></h1>
           </div>
-          <div class="progress-box">
-            <div class="progress-label"><span>تم الحل</span><strong id="answered-count">0 / 0</strong></div>
-            <div class="progress-track"><span id="progress-bar"></span></div>
-          </div>
         </div>
 
         <div class="quiz-tools">
           <p>كل سؤال ظاهر بنفس اختياراته الأصلية من الملف بعد تصحيح الأخطاء الإملائية فقط.</p>
-          <button class="ghost-button" id="clear-answers" type="button">مسح الإجابات</button>
         </div>
 
         <form id="quiz-form">
@@ -122,6 +129,6 @@
     <script src="data/codex-lecture6.js"></script>
     <script src="data/codex-lecture7.js"></script>
     <script src="data/original-choices.js?v=2"></script>
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
   </body>
 </html>

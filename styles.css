@@ -112,6 +112,75 @@ button { cursor: pointer; }
 .topbar-stat span { font-weight: 800; font-size: 17px; }
 .topbar-stat small { font-size: 9px; margin-top: 2px; }
 
+.topbar-stat:has(.topbar-progress:not(.is-hidden)) {
+  width: min(390px, 48vw);
+  padding: 7px;
+  background: var(--ink);
+  text-align: start;
+}
+
+.topbar-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-progress-content {
+  min-width: 120px;
+  flex: 1;
+}
+
+.topbar-progress-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px;
+}
+
+.topbar-progress-label small {
+  margin: 0;
+  color: var(--paper);
+  font-size: 9px;
+}
+
+.topbar-progress-label strong {
+  color: var(--paper);
+  font-size: 10px;
+}
+
+.topbar-progress-track {
+  height: 5px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.topbar-progress-track span {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--yellow);
+  transition: width 180ms ease;
+}
+
+.topbar-clear-button {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.topbar-clear-button:hover {
+  border-color: var(--orange);
+  background: var(--orange);
+}
+
 main {
   width: min(1180px, calc(100% - 36px));
   margin: 0 auto;
@@ -375,7 +444,7 @@ main {
 
 .quiz-heading {
   display: grid;
-  grid-template-columns: auto 1fr 260px;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 24px;
   margin-bottom: 28px;
@@ -398,37 +467,6 @@ main {
 
 .back-button { padding: 12px 14px; }
 .ghost-button { padding: 10px 13px; }
-
-.progress-box {
-  padding: 15px;
-  border-radius: 17px;
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-}
-
-.progress-track {
-  display: block;
-  height: 6px;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.progress-track span {
-  display: block;
-  width: 0;
-  height: 100%;
-  background: var(--yellow);
-  border-radius: inherit;
-  transition: width 180ms ease;
-}
 
 .quiz-tools {
   margin-bottom: 14px;
@@ -609,11 +647,12 @@ main {
   .hero-card ol { margin-top: 38px; }
   .lecture-grid { grid-template-columns: repeat(2, 1fr); }
   .quiz-heading { grid-template-columns: auto 1fr; }
-  .progress-box { grid-column: 1 / -1; }
 }
 
 @media (max-width: 620px) {
   .topbar { width: min(100% - 20px, 1180px); top: 7px; }
+  .topbar-stat:has(.topbar-progress:not(.is-hidden)) { width: min(230px, 62vw); }
+  .topbar-clear-button { padding: 7px; font-size: 7px; }
   main { width: min(100% - 20px, 1180px); }
   .brand small { display: none; }
   .welcome { min-height: auto; padding: 55px 4px 30px; }
