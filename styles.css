@@ -31,6 +31,8 @@ button, input { font: inherit; }
 
 button { cursor: pointer; }
 
+.data-source { display: none !important; }
+
 .ambient {
   position: fixed;
   border-radius: 50%;
