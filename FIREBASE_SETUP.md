@@ -4,17 +4,12 @@ This branch is connected to the Firebase project `research-analysis-quiz-2026`.
 It loads quiz questions from Cloud Firestore and includes an admin dashboard at `admin.html`.
 If Firebase is not configured or cannot be reached, the main quiz automatically uses the local files in `data/`.
 
-## Remaining step: enable authentication
+## Authentication
 
-1. Open Firebase Authentication.
-2. Enable the Email/Password provider.
-3. Create the admin user `ahmed01020865017@gmail.com`.
+Email/Password Authentication is enabled and the admin user is:
+`ahmed01020865017@gmail.com`
 
-Firebase requires the first Authentication activation from the Console for free-tier projects.
-Firestore, rules, web app configuration, Hosting, and the local question import are already complete.
-
-Direct Authentication page:
-`https://console.firebase.google.com/project/research-analysis-quiz-2026/authentication/providers`
+Firestore, rules, web app configuration, Hosting, Authentication, and the local question import are complete.
 
 ## Deploy updates
 
