@@ -1,4 +1,7 @@
-const quizData = window.QUIZ_DATA || [];
+import { loadFirebaseLectures } from "./firebase-service.js";
+
+const firebaseQuizData = await loadFirebaseLectures();
+const quizData = firebaseQuizData || window.QUIZ_DATA || [];
 const welcomeScreen = document.querySelector("#welcome-screen");
 const lectureSection = document.querySelector("#lecture-section");
 const lectureGrid = document.querySelector("#lecture-grid");
@@ -412,6 +415,8 @@ const totalQuestions = quizData.reduce(
 );
 document.querySelector("#total-question-count").textContent = totalQuestions;
 document.querySelector("#hero-question-count").textContent = totalQuestions;
+document.querySelector("#data-source").textContent = firebaseQuizData ? "Firebase" : "Local";
+document.querySelector("#data-source").classList.toggle("is-firebase", Boolean(firebaseQuizData));
 renderLectureCards();
 renderExamCards();
 renderHardCard();

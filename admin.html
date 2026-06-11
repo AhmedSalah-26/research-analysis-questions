@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102c3a" />
+    <title>لوحة إدارة الأسئلة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css?v=1" />
+  </head>
+  <body>
+    <div class="admin-orb admin-orb-one"></div>
+    <div class="admin-orb admin-orb-two"></div>
+
+    <section class="login-shell" id="login-screen">
+      <form class="login-card" id="login-form">
+        <a href="index.html" class="admin-brand"><b>Q</b><span><strong>Questions Admin</strong><small>إدارة بنك الأسئلة</small></span></a>
+        <span class="admin-eyebrow">Firebase Dashboard</span>
+        <h1>سجّل الدخول للإدارة</h1>
+        <p>استخدم حساب Email/Password المضاف في Firebase Authentication.</p>
+        <label>البريد الإلكتروني<input id="login-email" type="email" required /></label>
+        <label>كلمة المرور<input id="login-password" type="password" required /></label>
+        <button class="primary-button" type="submit">دخول لوحة التحكم</button>
+        <output id="login-message"></output>
+      </form>
+    </section>
+
+    <main class="dashboard is-hidden" id="dashboard">
+      <header class="admin-header">
+        <a href="index.html" class="admin-brand"><b>Q</b><span><strong>Questions Admin</strong><small>إدارة بنك الأسئلة</small></span></a>
+        <div class="admin-header-actions">
+          <span id="admin-email"></span>
+          <button class="ghost-button" id="logout-button" type="button">تسجيل الخروج</button>
+        </div>
+      </header>
+
+      <section class="dashboard-intro">
+        <div>
+          <span class="admin-eyebrow">Control room</span>
+          <h1>لوحة إدارة الأسئلة</h1>
+          <p>راجع بنك الأسئلة وعدّل المحتوى والاختيارات من مكان واحد.</p>
+        </div>
+        <div class="dashboard-actions">
+          <button class="ghost-button" id="import-button" type="button">استيراد الأسئلة المحلية</button>
+          <button class="primary-button" id="add-question-button" type="button">إضافة سؤال جديد</button>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <article><span>المحاضرات</span><strong id="lecture-stat">0</strong></article>
+        <article><span>كل الأسئلة</span><strong id="question-stat">0</strong></article>
+        <article><span>المحاضرة الحالية</span><strong id="current-stat">0</strong></article>
+      </section>
+
+      <section class="questions-panel">
+        <div class="panel-tools">
+          <label>المحاضرة<select id="lecture-filter"></select></label>
+          <label class="search-field">بحث<input id="question-search" type="search" placeholder="ابحث في السؤال أو الإجابة..." /></label>
+          <button class="ghost-button" id="refresh-button" type="button">تحديث البيانات</button>
+        </div>
+        <div class="status-line" id="status-line">جاهز</div>
+        <div class="question-table" id="admin-question-list"></div>
+      </section>
+    </main>
+
+    <div class="editor-overlay is-hidden" id="editor-overlay">
+      <form class="editor-card" id="question-form">
+        <div class="editor-heading">
+          <div><span class="admin-eyebrow">Question editor</span><h2 id="editor-title">إضافة سؤال</h2></div>
+          <button class="close-editor" id="close-editor" type="button">×</button>
+        </div>
+        <input id="question-id" type="hidden" />
+        <label>المحاضرة<select id="question-lecture" required></select></label>
+        <label>نص السؤال<textarea id="question-text" rows="3" required></textarea></label>
+        <label>الإجابة الصحيحة<input id="question-answer" required /></label>
+        <label>الاختيارات <small>اختيار واحد في كل سطر</small><textarea id="question-choices" rows="6" required></textarea></label>
+        <label>صفحة المصدر<input id="question-page" type="number" min="0" value="0" /></label>
+        <div class="editor-actions">
+          <button class="ghost-button" id="cancel-editor" type="button">إلغاء</button>
+          <button class="primary-button" type="submit">حفظ السؤال</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="data/questions.js"></script>
+    <script src="data/questions-lecture1.js"></script>
+    <script src="data/questions-lecture2.js"></script>
+    <script src="data/questions-lecture3.js"></script>
+    <script src="data/questions-lecture4.js"></script>
+    <script src="data/questions-lecture5.js"></script>
+    <script src="data/questions-lecture6.js"></script>
+    <script src="data/questions-lecture7.js"></script>
+    <script src="data/original-choices.js?v=2"></script>
+    <script type="module" src="admin.js?v=1"></script>
+  </body>
+</html>

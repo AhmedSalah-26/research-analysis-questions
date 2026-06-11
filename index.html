@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -38,6 +38,7 @@
           <button class="topbar-clear-button" id="clear-answers" type="button">مسح الإجابات</button>
         </div>
       </div>
+      <span class="data-source" id="data-source">Local</span>
     </header>
 
     <main>
@@ -137,6 +138,9 @@
         </span>
         <b aria-hidden="true">in</b>
       </a>
+      <a class="admin-link" href="admin.html">
+        <span class="footer-credit"><small>Firebase</small><strong>Questions Dashboard</strong></span>
+      </a>
     </footer>
 
     <div class="result-overlay is-hidden" id="result-overlay">
@@ -170,6 +174,6 @@
     <script src="data/questions-lecture7.js"></script>
     <script src="data/original-choices.js?v=2"></script>
     <script src="data/hard-questions.js?v=1"></script>
-    <script src="app.js?v=12"></script>
+    <script type="module" src="app.js?v=13"></script>
   </body>
 </html>
