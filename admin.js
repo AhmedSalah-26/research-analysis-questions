@@ -100,7 +100,9 @@ loginForm.addEventListener("submit", async (event) => {
     await login(document.querySelector("#login-email").value, document.querySelector("#login-password").value);
     message.textContent = "";
   } catch (error) {
-    message.textContent = error.message;
+    message.textContent = error.message.includes("configuration-not-found")
+      ? "فعّل Email/Password من Firebase Authentication أولًا."
+      : error.message;
   }
 });
 

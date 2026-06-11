@@ -1,4 +1,8 @@
 .api-extract/
 .env
+.firebase-admin-credentials.txt
+.firebase/
+firebase-debug.log
+*-debug.log
 
 .vercel
