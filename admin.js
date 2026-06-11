@@ -10,7 +10,7 @@ import {
   saveLecture,
   saveQuestion,
   watchAuth,
-} from "./firebase-service.js";
+} from "./firebase-service.js?v=2";
 
 const $ = (selector) => document.querySelector(selector);
 const loginScreen = $("#login-screen");

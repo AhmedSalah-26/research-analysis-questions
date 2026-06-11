@@ -1,4 +1,4 @@
-import { loadPlatformData } from "./firebase-service.js";
+import { loadPlatformData } from "./firebase-service.js?v=2";
 
 let platformData = { lectures: [], exams: [] };
 try {
