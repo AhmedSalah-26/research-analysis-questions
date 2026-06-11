@@ -17,6 +17,7 @@
       ".vercel/**",
       "**/node_modules/**",
       "tools/**",
+      "data/**",
       "FIREBASE_SETUP.md",
       "firestore.rules"
     ]

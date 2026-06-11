@@ -16,5 +16,15 @@ service cloud.firestore {
         allow write: if isAdmin();
       }
     }
+
+    match /exams/{examId} {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      match /questions/{questionId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+    }
   }
 }

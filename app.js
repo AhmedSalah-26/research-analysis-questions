@@ -1,7 +1,12 @@
-import { loadFirebaseLectures } from "./firebase-service.js";
+import { loadPlatformData } from "./firebase-service.js";
 
-const firebaseQuizData = await loadFirebaseLectures();
-const quizData = firebaseQuizData || window.QUIZ_DATA || [];
+let platformData = { lectures: [], exams: [] };
+try {
+  platformData = await loadPlatformData();
+} catch (error) {
+  console.error("تعذر تحميل بنك الأسئلة", error);
+}
+const quizData = platformData.lectures;
 const welcomeScreen = document.querySelector("#welcome-screen");
 const lectureSection = document.querySelector("#lecture-section");
 const lectureGrid = document.querySelector("#lecture-grid");
@@ -45,8 +50,8 @@ function seededShuffle(items, seed) {
   return shuffled;
 }
 
-function buildComprehensiveExam(examNumber) {
-  const seed = 20260609 + examNumber * 7919;
+function buildRandomExam(exam) {
+  const seed = Number(exam.seed);
   const questionPool = quizData.map((lecture, lectureIndex) => lecture.questions
     .filter(hasChoices)
     .map((question) => ({
@@ -54,59 +59,21 @@ function buildComprehensiveExam(examNumber) {
       id: `${lecture.id}-${question.id}`,
       sourceLectureNumber: lectureIndex + 1,
     })));
-  const selected = questionPool.flatMap((questions, lectureIndex) =>
-    seededShuffle(questions, seed + lectureIndex * 101).slice(0, 14));
-  const selectedIds = new Set(selected.map((question) => question.id));
-  const remaining = questionPool.flat().filter((question) => !selectedIds.has(question.id));
-  const questions = seededShuffle(
-    [...selected, ...seededShuffle(remaining, seed + 997).slice(0, 2)],
-    seed + 1997,
-  );
+  const questions = seededShuffle(questionPool.flat(), seed).slice(0, Number(exam.questionCount));
 
   return {
-    id: `exam${examNumber}`,
-    type: "exam",
-    title: `الاختبار الشامل ${examNumber}`,
-    fileName: "100 سؤال من المحاضرات السبع",
+    ...exam,
+    fileName: exam.description,
     questions,
   };
 }
 
-const comprehensiveExams = Array.from({ length: 10 }, (_, index) => buildComprehensiveExam(index + 1));
-
-function buildHardQuiz() {
-  const rawQuestions = window.HARD_QUESTIONS || [];
-  const answersByLecture = rawQuestions.reduce((groups, question) => {
-    groups[question.lecture] ??= [];
-    groups[question.lecture].push(question);
-    return groups;
-  }, {});
-  const questions = rawQuestions.map((question, index) => {
-    const answerPool = [...new Set(answersByLecture[question.lecture].map((item) => item.answer))]
-      .filter((answer) => answer !== question.answer);
-    const choices = seededShuffle(
-      [question.answer, ...seededShuffle(answerPool, 5100 + index).slice(0, 3)],
-      9100 + index,
-    );
-    return {
-      ...question,
-      id: `hard-${index + 1}`,
-      sourceLectureNumber: question.lecture,
-      choices,
-    };
-  });
-
-  return {
-    id: "hard-focus",
-    type: "hard",
-    title: "الأسئلة الصعبة",
-    fileName: "أسئلة مختارة تحتاج تركيز",
-    questions: seededShuffle(questions, 20260609),
-  };
-}
-
-const hardQuiz = buildHardQuiz();
-const allQuizzes = [...quizData, ...comprehensiveExams, hardQuiz];
+const activeExams = platformData.exams
+  .filter((exam) => exam.active !== false)
+  .map((exam) => exam.mode === "stored" ? { ...exam, fileName: exam.description } : buildRandomExam(exam));
+const comprehensiveExams = activeExams.filter((exam) => exam.type !== "hard");
+const hardQuiz = activeExams.find((exam) => exam.type === "hard") || null;
+const allQuizzes = [...quizData, ...activeExams];
 
 const storageKey = (lectureId) => `research-quiz:${lectureId}`;
 const getSaved = (lectureId) => JSON.parse(localStorage.getItem(storageKey(lectureId)) || "{}");
@@ -149,22 +116,25 @@ function renderLectureCards() {
 function renderExamCards() {
   examGrid.innerHTML = comprehensiveExams.map((exam, index) => {
     const savedCount = Object.keys(getSaved(exam.id)).length;
-    const percent = Math.round((savedCount / exam.questions.length) * 100);
+    const percent = exam.questions.length ? Math.round((savedCount / exam.questions.length) * 100) : 0;
     return `
       <button class="exam-card" type="button" data-quiz="${exam.id}">
         <div class="exam-card-top">
-          <small>اختبار شامل · المحاضرات السبع</small>
+          <small>${escapeHtml(exam.description)}</small>
           <b class="exam-card-number">${String(index + 1).padStart(2, "0")}</b>
         </div>
-        <strong>${exam.title}</strong>
-        <span>100 سؤال عشوائي · تم حل ${savedCount}</span>
+        <strong>${escapeHtml(exam.title)}</strong>
+        <span>${exam.questions.length} سؤال · تم حل ${savedCount}</span>
         <div class="lecture-progress"><i style="width:${percent}%"></i></div>
       </button>
     `;
   }).join("");
+  examSection.classList.toggle("is-hidden", !comprehensiveExams.length);
 }
 
 function renderHardCard() {
+  hardSection.classList.toggle("is-hidden", !hardQuiz);
+  if (!hardQuiz) return;
   document.querySelector("#hard-question-count").textContent = `${hardQuiz.questions.length} سؤال`;
   document.querySelector("#hard-progress-text").textContent = "كل الأسئلة محلولة";
   document.querySelector("#hard-progress-bar").style.width = "100%";
@@ -367,7 +337,7 @@ examGrid.addEventListener("click", (event) => {
 });
 document.querySelector("#hard-card").addEventListener("click", (event) => {
   const button = event.target.closest("[data-hard-mode]");
-  if (!button) return;
+  if (!button || !hardQuiz) return;
   hardReviewMode = button.dataset.hardMode === "review";
   openQuiz(hardQuiz.id);
 });
@@ -415,8 +385,7 @@ const totalQuestions = quizData.reduce(
 );
 document.querySelector("#total-question-count").textContent = totalQuestions;
 document.querySelector("#hero-question-count").textContent = totalQuestions;
-document.querySelector("#data-source").textContent = firebaseQuizData ? "Firebase" : "Local";
-document.querySelector("#data-source").classList.toggle("is-firebase", Boolean(firebaseQuizData));
+document.querySelector("#hero-lecture-count").textContent = quizData.length;
 renderLectureCards();
 renderExamCards();
 renderHardCard();

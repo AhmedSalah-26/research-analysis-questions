@@ -119,23 +119,6 @@ button { cursor: pointer; }
 .topbar-stat span { font-weight: 800; font-size: 17px; }
 .topbar-stat small { font-size: 9px; margin-top: 2px; }
 
-.data-source {
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  color: var(--ink-soft);
-  background: var(--card);
-  font-size: 7px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.data-source.is-firebase {
-  border-color: var(--green);
-  color: var(--green);
-  background: var(--green-soft);
-}
-
 .topbar-stat:has(.topbar-progress:not(.is-hidden)) {
   width: min(390px, 48vw);
   padding: 7px;
@@ -926,7 +909,6 @@ main {
   }
   main { width: min(100% - 20px, 1180px); }
   .brand small { display: none; }
-  .data-source { display: none; }
   .welcome { min-height: auto; padding: 55px 4px 30px; }
   .welcome h1 { font-size: 53px; }
   .welcome-stats { gap: 4px; }

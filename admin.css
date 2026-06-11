@@ -53,13 +53,16 @@ input:focus, textarea:focus, select:focus { border-color: var(--orange); }
 .dashboard-intro p { margin: 0; color: var(--ink-soft); font-size: 11px; }
 .dashboard-actions { display: flex; gap: 8px; }
 
-.stats-grid { margin: 28px 0 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stats-grid { margin: 28px 0 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .stats-grid article { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
 .stats-grid span, .stats-grid strong { display: block; }
 .stats-grid span { color: var(--ink-soft); font-size: 8px; }
 .stats-grid strong { margin-top: 7px; font-size: 26px; }
 
 .questions-panel { padding: 16px; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,253,248,.82); box-shadow: var(--shadow); }
+.exams-panel { margin-top: 16px; }
+.panel-title { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.panel-title h2 { margin: 5px 0 0; font-size: 20px; }
 .panel-tools { display: grid; grid-template-columns: 220px 1fr auto; align-items: end; gap: 10px; }
 .status-line { padding: 12px 2px; color: var(--ink-soft); font-size: 8px; }
 .question-table { display: grid; gap: 7px; }
@@ -75,12 +78,16 @@ input:focus, textarea:focus, select:focus { border-color: var(--orange); }
 
 .editor-overlay { position: fixed; inset: 0; z-index: 30; padding: 20px; display: grid; place-items: center; background: rgba(16,44,58,.7); backdrop-filter: blur(8px); }
 .editor-card { width: min(620px, 100%); max-height: calc(100vh - 40px); padding: 24px; overflow-y: auto; border-radius: 25px; background: var(--card); box-shadow: var(--shadow); }
+.compact-editor { width: min(500px, 100%); }
 .editor-heading { margin-bottom: 20px; display: flex; align-items: start; justify-content: space-between; gap: 15px; }
 .editor-heading h2 { margin: 7px 0 0; font-size: 27px; }
 .close-editor { width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--paper); font-size: 19px; }
 .editor-card label + label { margin-top: 11px; }
 .editor-card label small { font-size: 7px; font-weight: 400; }
 .editor-actions { margin-top: 18px; display: flex; justify-content: end; gap: 7px; }
+.check-label { margin-top: 14px !important; display: flex; grid-template-columns: auto 1fr; align-items: center; }
+.check-label input { width: 18px; height: 18px; }
+button:disabled { cursor: not-allowed; opacity: .45; }
 
 @media (max-width: 760px) {
   .dashboard-intro { align-items: stretch; flex-direction: column; }

@@ -38,17 +38,16 @@
           <button class="topbar-clear-button" id="clear-answers" type="button">مسح الإجابات</button>
         </div>
       </div>
-      <span class="data-source" id="data-source">Local</span>
     </header>
 
     <main>
       <section class="welcome" id="welcome-screen">
         <div class="welcome-copy">
           <span class="eyebrow">Research & Analysis Skills</span>
-          <h1><em>هانت يا بطل</em></h1>
+          <h1><em>بنك أسئلة مهارات البحث والتحليل</em></h1>
           <p>كل أسئلة الملف هتظهر ورا بعض في صفحة واحدة، وفي النهاية هتعرف الصح والغلط والإجابة الصحيحة لكل غلطة.</p>
           <div class="welcome-stats">
-            <div><strong>7</strong><span>محاضرات</span></div>
+            <div><strong id="hero-lecture-count">0</strong><span>محاضرات</span></div>
             <div><strong id="hero-question-count">0</strong><span>سؤال</span></div>
             <div><strong>100%</strong><span>تصحيح فوري</span></div>
           </div>
@@ -81,7 +80,7 @@
             <span class="eyebrow">اختبر نفسك في المنهج كله</span>
             <h2>اختبارات شاملة</h2>
           </div>
-          <span class="section-note">10 اختبارات · كل اختبار 100 سؤال عشوائي من المحاضرات السبع</span>
+          <span class="section-note">اختبارات يتم إعدادها وتحديثها من لوحة الإدارة</span>
         </div>
         <div class="exam-grid" id="exam-grid"></div>
       </section>
@@ -139,7 +138,7 @@
         <b aria-hidden="true">in</b>
       </a>
       <a class="admin-link" href="admin.html">
-        <span class="footer-credit"><small>Firebase</small><strong>Questions Dashboard</strong></span>
+        <span class="footer-credit"><small>إدارة المحتوى</small><strong>Questions Dashboard</strong></span>
       </a>
     </footer>
 
@@ -164,16 +163,6 @@
       <button id="next-issue" type="button" aria-label="الإجابة الغلط التالية">↓</button>
     </nav>
 
-    <script src="data/questions.js"></script>
-    <script src="data/questions-lecture1.js"></script>
-    <script src="data/questions-lecture2.js"></script>
-    <script src="data/questions-lecture3.js"></script>
-    <script src="data/questions-lecture4.js"></script>
-    <script src="data/questions-lecture5.js"></script>
-    <script src="data/questions-lecture6.js"></script>
-    <script src="data/questions-lecture7.js"></script>
-    <script src="data/original-choices.js?v=2"></script>
-    <script src="data/hard-questions.js?v=1"></script>
-    <script type="module" src="app.js?v=13"></script>
+    <script type="module" src="app.js?v=14"></script>
   </body>
 </html>

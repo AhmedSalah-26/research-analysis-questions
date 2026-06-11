@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#102c3a" />
-    <title>لوحة إدارة الأسئلة</title>
+    <title>لوحة إدارة بنك الأسئلة</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="admin.css?v=1" />
+    <link rel="stylesheet" href="admin.css?v=2" />
   </head>
   <body>
     <div class="admin-orb admin-orb-one"></div>
@@ -17,9 +17,9 @@
     <section class="login-shell" id="login-screen">
       <form class="login-card" id="login-form">
         <a href="index.html" class="admin-brand"><b>Q</b><span><strong>Questions Admin</strong><small>إدارة بنك الأسئلة</small></span></a>
-        <span class="admin-eyebrow">Firebase Dashboard</span>
+        <span class="admin-eyebrow">لوحة الإدارة</span>
         <h1>سجّل الدخول للإدارة</h1>
-        <p>استخدم حساب Email/Password المضاف في Firebase Authentication.</p>
+        <p>استخدم حساب الإدارة لتعديل المحاضرات والأسئلة والاختبارات.</p>
         <label>البريد الإلكتروني<input id="login-email" type="email" required /></label>
         <label>كلمة المرور<input id="login-password" type="password" required /></label>
         <button class="primary-button" type="submit">دخول لوحة التحكم</button>
@@ -39,22 +39,31 @@
       <section class="dashboard-intro">
         <div>
           <span class="admin-eyebrow">Control room</span>
-          <h1>لوحة إدارة الأسئلة</h1>
-          <p>راجع بنك الأسئلة وعدّل المحتوى والاختيارات من مكان واحد.</p>
+          <h1>إدارة بنك الأسئلة</h1>
+          <p>أنشئ المحاضرات وعدّل أسئلتها واضبط الاختبارات من مكان واحد.</p>
         </div>
         <div class="dashboard-actions">
-          <button class="ghost-button" id="import-button" type="button">استيراد الأسئلة المحلية</button>
-          <button class="primary-button" id="add-question-button" type="button">إضافة سؤال جديد</button>
+          <button class="ghost-button" id="add-exam-button" type="button">إضافة اختبار</button>
+          <button class="ghost-button" id="add-lecture-button" type="button">إضافة محاضرة</button>
+          <button class="primary-button" id="add-question-button" type="button">إضافة سؤال</button>
         </div>
       </section>
 
       <section class="stats-grid">
         <article><span>المحاضرات</span><strong id="lecture-stat">0</strong></article>
         <article><span>كل الأسئلة</span><strong id="question-stat">0</strong></article>
-        <article><span>المحاضرة الحالية</span><strong id="current-stat">0</strong></article>
+        <article><span>الاختبارات</span><strong id="exam-stat">0</strong></article>
+        <article><span>أسئلة المحاضرة الحالية</span><strong id="current-stat">0</strong></article>
       </section>
 
       <section class="questions-panel">
+        <div class="panel-title">
+          <div><span class="admin-eyebrow">Lectures & questions</span><h2>المحاضرات والأسئلة</h2></div>
+          <div class="row-actions">
+            <button id="edit-lecture-button" type="button">تعديل المحاضرة</button>
+            <button class="delete-button" id="delete-lecture-button" type="button">حذف المحاضرة</button>
+          </div>
+        </div>
         <div class="panel-tools">
           <label>المحاضرة<select id="lecture-filter"></select></label>
           <label class="search-field">بحث<input id="question-search" type="search" placeholder="ابحث في السؤال أو الإجابة..." /></label>
@@ -63,36 +72,62 @@
         <div class="status-line" id="status-line">جاهز</div>
         <div class="question-table" id="admin-question-list"></div>
       </section>
+
+      <section class="questions-panel exams-panel">
+        <div class="panel-title">
+          <div><span class="admin-eyebrow">Exams</span><h2>الاختبارات</h2></div>
+          <button class="primary-button" id="panel-add-exam-button" type="button">إضافة اختبار</button>
+        </div>
+        <div class="question-table" id="admin-exam-list"></div>
+      </section>
     </main>
 
-    <div class="editor-overlay is-hidden" id="editor-overlay">
+    <div class="editor-overlay is-hidden" id="question-editor">
       <form class="editor-card" id="question-form">
         <div class="editor-heading">
-          <div><span class="admin-eyebrow">Question editor</span><h2 id="editor-title">إضافة سؤال</h2></div>
-          <button class="close-editor" id="close-editor" type="button">×</button>
+          <div><span class="admin-eyebrow">Question editor</span><h2 id="question-editor-title">إضافة سؤال</h2></div>
+          <button class="close-editor" type="button" data-close-editor>×</button>
         </div>
-        <input id="question-id" type="hidden" />
         <label>المحاضرة<select id="question-lecture" required></select></label>
         <label>نص السؤال<textarea id="question-text" rows="3" required></textarea></label>
         <label>الإجابة الصحيحة<input id="question-answer" required /></label>
         <label>الاختيارات <small>اختيار واحد في كل سطر</small><textarea id="question-choices" rows="6" required></textarea></label>
         <label>صفحة المصدر<input id="question-page" type="number" min="0" value="0" /></label>
-        <div class="editor-actions">
-          <button class="ghost-button" id="cancel-editor" type="button">إلغاء</button>
-          <button class="primary-button" type="submit">حفظ السؤال</button>
-        </div>
+        <div class="editor-actions"><button class="ghost-button" type="button" data-close-editor>إلغاء</button><button class="primary-button" type="submit">حفظ السؤال</button></div>
       </form>
     </div>
 
-    <script src="data/questions.js"></script>
-    <script src="data/questions-lecture1.js"></script>
-    <script src="data/questions-lecture2.js"></script>
-    <script src="data/questions-lecture3.js"></script>
-    <script src="data/questions-lecture4.js"></script>
-    <script src="data/questions-lecture5.js"></script>
-    <script src="data/questions-lecture6.js"></script>
-    <script src="data/questions-lecture7.js"></script>
-    <script src="data/original-choices.js?v=2"></script>
-    <script type="module" src="admin.js?v=1"></script>
+    <div class="editor-overlay is-hidden" id="lecture-editor">
+      <form class="editor-card compact-editor" id="lecture-form">
+        <div class="editor-heading">
+          <div><span class="admin-eyebrow">Lecture editor</span><h2 id="lecture-editor-title">إضافة محاضرة</h2></div>
+          <button class="close-editor" type="button" data-close-editor>×</button>
+        </div>
+        <label>معرّف المحاضرة <small>بالإنجليزية وبدون مسافات، مثال: lecture8</small><input id="lecture-id" required pattern="[a-zA-Z0-9_-]+" /></label>
+        <label>اسم المحاضرة<input id="lecture-title" required /></label>
+        <label>وصف أو اسم الملف<input id="lecture-file-name" required /></label>
+        <label>الترتيب<input id="lecture-order" type="number" min="1" required /></label>
+        <div class="editor-actions"><button class="ghost-button" type="button" data-close-editor>إلغاء</button><button class="primary-button" type="submit">حفظ المحاضرة</button></div>
+      </form>
+    </div>
+
+    <div class="editor-overlay is-hidden" id="exam-editor">
+      <form class="editor-card compact-editor" id="exam-form">
+        <div class="editor-heading">
+          <div><span class="admin-eyebrow">Exam editor</span><h2 id="exam-editor-title">إضافة اختبار</h2></div>
+          <button class="close-editor" type="button" data-close-editor>×</button>
+        </div>
+        <label>معرّف الاختبار <small>بالإنجليزية وبدون مسافات</small><input id="exam-id" required pattern="[a-zA-Z0-9_-]+" /></label>
+        <label>اسم الاختبار<input id="exam-title" required /></label>
+        <label>الوصف<input id="exam-description" required /></label>
+        <label>عدد الأسئلة<input id="exam-question-count" type="number" min="1" value="100" required /></label>
+        <label>رقم الترتيب<input id="exam-order" type="number" min="1" required /></label>
+        <label>Seed العشوائية<input id="exam-seed" type="number" required /></label>
+        <label class="check-label"><input id="exam-active" type="checkbox" checked /> إظهار الاختبار للطلاب</label>
+        <div class="editor-actions"><button class="ghost-button" type="button" data-close-editor>إلغاء</button><button class="primary-button" type="submit">حفظ الاختبار</button></div>
+      </form>
+    </div>
+
+    <script type="module" src="admin.js?v=2"></script>
   </body>
 </html>

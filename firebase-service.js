@@ -32,18 +32,21 @@ function getFirebase() {
   return { app, auth, db };
 }
 
-async function fetchLectures() {
+function requireFirebase() {
   const firebase = getFirebase();
-  if (!firebase) throw new Error("Firebase غير مهيأ");
+  if (!firebase) throw new Error("قاعدة البيانات غير مهيأة");
+  return firebase;
+}
 
-  const lectureSnapshot = await getDocs(query(collection(firebase.db, "lectures"), orderBy("order")));
-  return Promise.all(lectureSnapshot.docs.map(async (lectureDoc) => {
-    const lecture = lectureDoc.data();
-    const questionSnapshot = await getDocs(query(collection(firebase.db, "lectures", lectureDoc.id, "questions"), orderBy("order")));
+async function fetchCollectionWithQuestions(collectionName) {
+  const firebase = requireFirebase();
+  const snapshot = await getDocs(query(collection(firebase.db, collectionName), orderBy("order")));
+  return Promise.all(snapshot.docs.map(async (itemDoc) => {
+    const item = itemDoc.data();
+    const questionSnapshot = await getDocs(query(collection(firebase.db, collectionName, itemDoc.id, "questions"), orderBy("order")));
     return {
-      id: lectureDoc.id,
-      title: lecture.title,
-      fileName: lecture.fileName,
+      id: itemDoc.id,
+      ...item,
       questions: questionSnapshot.docs.map((questionDoc) => ({
         id: questionDoc.id,
         ...questionDoc.data(),
@@ -52,15 +55,12 @@ async function fetchLectures() {
   }));
 }
 
-export async function loadFirebaseLectures() {
-  if (!isFirebaseConfigured) return null;
-  try {
-    const lectures = await fetchLectures();
-    return lectures.length ? lectures : null;
-  } catch (error) {
-    console.warn("Firebase questions could not be loaded. Using local questions.", error);
-    return null;
-  }
+export async function loadPlatformData() {
+  const [lectures, exams] = await Promise.all([
+    fetchCollectionWithQuestions("lectures"),
+    fetchCollectionWithQuestions("exams"),
+  ]);
+  return { lectures, exams };
 }
 
 export function watchAuth(callback) {
@@ -73,8 +73,7 @@ export function watchAuth(callback) {
 }
 
 export async function login(email, password) {
-  const firebase = getFirebase();
-  if (!firebase) throw new Error("أضف إعدادات Firebase أولًا في firebase-config.js");
+  const firebase = requireFirebase();
   return signInWithEmailAndPassword(firebase.auth, email, password);
 }
 
@@ -83,13 +82,12 @@ export async function logout() {
   if (firebase) await signOut(firebase.auth);
 }
 
-export async function getAdminLectures() {
-  return fetchLectures();
+export async function getAdminData() {
+  return loadPlatformData();
 }
 
 export async function saveLecture(lecture) {
-  const firebase = getFirebase();
-  if (!firebase) throw new Error("Firebase غير مهيأ");
+  const firebase = requireFirebase();
   await setDoc(doc(firebase.db, "lectures", lecture.id), {
     title: lecture.title,
     fileName: lecture.fileName,
@@ -97,9 +95,12 @@ export async function saveLecture(lecture) {
   }, { merge: true });
 }
 
+export async function removeLecture(lectureId) {
+  await removeDocumentTree("lectures", lectureId);
+}
+
 export async function saveQuestion(lectureId, question) {
-  const firebase = getFirebase();
-  if (!firebase) throw new Error("Firebase غير مهيأ");
+  const firebase = requireFirebase();
   await setDoc(doc(firebase.db, "lectures", lectureId, "questions", String(question.id)), {
     question: question.question,
     answer: question.answer,
@@ -110,41 +111,37 @@ export async function saveQuestion(lectureId, question) {
 }
 
 export async function removeQuestion(lectureId, questionId) {
-  const firebase = getFirebase();
-  if (!firebase) throw new Error("Firebase غير مهيأ");
+  const firebase = requireFirebase();
   await deleteDoc(doc(firebase.db, "lectures", lectureId, "questions", String(questionId)));
 }
 
-export async function importLocalQuestions(lectures, progress = () => {}) {
-  const firebase = getFirebase();
-  if (!firebase) throw new Error("Firebase غير مهيأ");
+export async function saveExam(exam) {
+  const firebase = requireFirebase();
+  await setDoc(doc(firebase.db, "exams", exam.id), {
+    title: exam.title,
+    description: exam.description,
+    type: exam.type || "exam",
+    mode: exam.mode || "random",
+    questionCount: Number(exam.questionCount || 100),
+    seed: Number(exam.seed || Date.now()),
+    order: Number(exam.order),
+    active: exam.active !== false,
+  }, { merge: true });
+}
 
-  const writes = [];
-  lectures.forEach((lecture, lectureIndex) => {
-    writes.push({
-      ref: doc(firebase.db, "lectures", lecture.id),
-      data: { title: lecture.title, fileName: lecture.fileName, order: lectureIndex + 1 },
-    });
-    lecture.questions.forEach((question, questionIndex) => {
-      writes.push({
-        ref: doc(firebase.db, "lectures", lecture.id, "questions", String(question.id)),
-        data: {
-          question: question.question,
-          answer: question.answer,
-          choices: question.choices || [],
-          sourcePage: Number(question.sourcePage || 0),
-          order: questionIndex + 1,
-        },
-      });
-    });
-  });
+export async function removeExam(examId) {
+  await removeDocumentTree("exams", examId);
+}
 
-  for (let start = 0; start < writes.length; start += 450) {
+async function removeDocumentTree(collectionName, itemId) {
+  const firebase = requireFirebase();
+  const questionSnapshot = await getDocs(collection(firebase.db, collectionName, itemId, "questions"));
+  for (let start = 0; start < questionSnapshot.docs.length; start += 450) {
     const batch = writeBatch(firebase.db);
-    writes.slice(start, start + 450).forEach((write) => batch.set(write.ref, write.data));
+    questionSnapshot.docs.slice(start, start + 450).forEach((questionDoc) => batch.delete(questionDoc.ref));
     await batch.commit();
-    progress(Math.min(start + 450, writes.length), writes.length);
   }
+  await deleteDoc(doc(firebase.db, collectionName, itemId));
 }
 
 export { isFirebaseConfigured };
